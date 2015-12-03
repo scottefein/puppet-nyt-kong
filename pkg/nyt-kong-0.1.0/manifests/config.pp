@@ -1,0 +1,3 @@
+class kong::config{
+	
+}

@@ -1,0 +1,14 @@
+{
+  "name": "nyt-kong",
+  "version": "0.1.0",
+  "author": "Scott Feinberg",
+  "summary": "Puppet Module to install Kong",
+  "license": "Apache-2.0",
+  "source": "github.com/nytm/infodev-experiments/puppet/modules",
+  "project_page": "https://github.com/nytm/infodev-experiments/puppet/modules",
+  "issues_url": "https://github.com/nytm/infodev-experiments/puppet/modules/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

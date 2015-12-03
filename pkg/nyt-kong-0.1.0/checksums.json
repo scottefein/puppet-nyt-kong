@@ -1,0 +1,13 @@
+{
+  "Gemfile": "6a08ec57f18e97c4ead40a6529d05aa8",
+  "README.md": "25f7d1bcc9240f54c46372ca886ea7bf",
+  "Rakefile": "3044cde52b8cd8508c8400076a66ef11",
+  "manifests/config.pp": "69d730223e828933bc2121422635aebe",
+  "manifests/init.pp": "67ea84ea1a09b74993e8fcde6e30fabe",
+  "manifests/install.pp": "bd17522c98045c54f88e60b2f289a100",
+  "metadata.json": "0d26299837fdf25bbc63981efcedd5de",
+  "spec/classes/init_spec.rb": "2be1d1eaf91e3fa9acd097a87a4edf23",
+  "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+  "templates/kong.yaml.erb": "4631d1b99d73f6d8273d1d86f0d3af1e",
+  "tests/init.pp": "17656a6dea149ab18e58584464e04ca8"
+}
