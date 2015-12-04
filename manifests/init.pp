@@ -11,6 +11,7 @@ class kong(
 	$proxy_ssl_port = 8443,
 	$admin_api_port = 8001,
 	$dnsmasq_port = 8053,
+	$cassandra_nodes = "127.0.0.1"
 
 ){
 	validate_string($cassandra_nodes)
@@ -51,6 +52,32 @@ class kong(
 			content => template('kong/kong.yaml.erb'),
 			path 	=> $config_url,
 			notify  => Exec['reload_kong'],
+		}
+
+		file {'kong_ssl_config':
+			ensure => directory,
+			path => "${nginx_working_dir}ssl",
+			after => File['kong_config'],
+		}
+
+		file { 'kong_ssl_cert':
+		  ensure  => file,
+		  force => true,
+	      purge => true,
+		  source => "puppet:///kong/kong-default.crt",
+		  path => '/usr/local/kong/ssl/kong-default.crt',
+		  after => File['kong_ssl_config'],
+		  before => Exec['start_kong'],
+		}
+
+		file { 'kong_ssl_key':
+		  ensure  => file,
+		  force => true,
+	      purge => true,
+		  source => "puppet:///kong/kong-default.key",
+		  path => '/usr/local/kong/ssl/kong-default.key',
+		  after => File['kong_ssl_config'],
+		  before => Exec['start_kong'],
 		}
 
 		exec { 'start_kong':
