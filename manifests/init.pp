@@ -24,11 +24,11 @@ class kong(
 	
 	if ($::operatingsystem == 'CentOS'){
 
-		package{'epel-release':
-			ensure => present,
-		}
+		#package{'epel-release':
+		#	ensure => present,
+		#}
 
-		package{['dnsmasq','nc','openssl098e']:
+		package{['nc','openssl098e']:
 			ensure => present,
 			before => Package["kong"],
 			require => Package["epel-release"],
@@ -57,16 +57,16 @@ class kong(
 		file {'kong_ssl_config':
 			ensure => directory,
 			path => "${nginx_working_dir}ssl",
-			after => File['kong_config'],
+			require => File['kong_config'],
 		}
 
 		file { 'kong_ssl_cert':
 		  ensure  => file,
 		  force => true,
 	      purge => true,
-		  source => "puppet:///kong/kong-default.crt",
+		  source => "puppet:///modules/kong/kong-default.crt",
 		  path => '/usr/local/kong/ssl/kong-default.crt',
-		  after => File['kong_ssl_config'],
+		  require => File['kong_ssl_config'],
 		  before => Exec['start_kong'],
 		}
 
@@ -74,9 +74,9 @@ class kong(
 		  ensure  => file,
 		  force => true,
 	      purge => true,
-		  source => "puppet:///kong/kong-default.key",
+		  source => "puppet:///modules/kong/kong-default.key",
 		  path => '/usr/local/kong/ssl/kong-default.key',
-		  after => File['kong_ssl_config'],
+		  require => File['kong_ssl_config'],
 		  before => Exec['start_kong'],
 		}
 
@@ -90,6 +90,7 @@ class kong(
 			command => 'kong reload',
 			path    => $kong_install_path,
 			refreshonly => true,
+			require => Package['kong'],
 		}
 	} else{
 		fail('Only CentOS 6 is currently supported')
