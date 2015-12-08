@@ -24,9 +24,7 @@ class kong(
 	
 	if ($::operatingsystem == 'CentOS'){
 
-		#package{'epel-release':
-		#	ensure => present,
-		#}
+		ensure_package('epel-release')
 
 		package{['nc','openssl098e']:
 			ensure => present,
@@ -45,6 +43,12 @@ class kong(
 			ensure => directory,
 			path   => '/etc/kong',
 			before => File['kong_config'],
+		}
+
+		file {'nginx_working_dir':
+			ensure => directory,
+			path   => $nginx_working_dir,
+			before => File['kong_ssl_config'],
 		}
 
 		file { 'kong_config':
@@ -84,14 +88,14 @@ class kong(
 		    command => $kong_start_command,
 		    path    => $kong_install_path,
 		    require => Package['kong'],
-		}
-
+		}->
 		exec {'reload_kong':
 			command => 'kong reload',
 			path    => $kong_install_path,
 			refreshonly => true,
 			require => Package['kong'],
 		}
+
 	} else{
 		fail('Only CentOS 6 is currently supported')
 	}
