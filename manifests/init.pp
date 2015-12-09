@@ -24,7 +24,7 @@ class kong(
 	
 	if ($::operatingsystem == 'CentOS'){
 
-		ensure_package('epel-release')
+		ensure_packages(['epel-release'])
 
 		package{['nc','openssl098e']:
 			ensure => present,
