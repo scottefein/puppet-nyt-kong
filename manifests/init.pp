@@ -24,7 +24,7 @@ class kong(
 	
 	if ($::operatingsystem == 'CentOS'){
 
-		ensure_packages(['epel-release'])
+		ensure_packages(['epel-release', 'dnsmasq'])
 
 		package{['nc','openssl098e']:
 			ensure => present,
