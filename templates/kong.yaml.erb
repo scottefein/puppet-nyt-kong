@@ -38,14 +38,13 @@ database: cassandra
 
 databases_available:
   cassandra:
-    properties:
-      hosts:
-        <% @cassandra_nodes.split(",").each do |node| %>
-        - "<%=node%>"
-        <% end %>
-      timeout: 1000
-      keyspace: kong
-      keepalive: 60000
+    contact_points:
+      <% @cassandra_nodes.split(",").each do |node| %>
+      - "<%=node%>"
+      <% end %>
+    timeout: 1000
+    keyspace: kong
+    keepalive: 60000
 
 ## Cassandra cache configuration
 database_cache_expiration: 5 # in seconds

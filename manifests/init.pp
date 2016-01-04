@@ -84,6 +84,16 @@ class kong(
 		  before => Exec['start_kong'],
 		}
 
+		file { '/etc/monit.d/kong':
+		    ensure  => file,
+		    mode    => '0600',
+		    owner   => 'root',
+		    group   => 'root',
+		    content => template('kong/monit-kong.conf'),
+		    notify  => Service['monit'],
+		    require => Package['monit'],
+		 }
+
 		exec { 'start_kong':
 		    command => $kong_start_command,
 		    path    => $kong_install_path,
