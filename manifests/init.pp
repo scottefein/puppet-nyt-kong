@@ -25,7 +25,7 @@ class kong(
 	
 	if ($::operatingsystem == 'CentOS'){
 
-		ensure_packages(['epel-release', 'dnsmasq'])
+		ensure_packages(['epel-release'])
 		if $install_dnsmasq == true {
 			ensure_packages(['dnsmasq'])
 		}
