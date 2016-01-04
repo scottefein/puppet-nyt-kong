@@ -11,7 +11,8 @@ class kong(
 	$proxy_ssl_port = 8443,
 	$admin_api_port = 8001,
 	$dnsmasq_port = 8053,
-	$cassandra_nodes = "127.0.0.1"
+	$cassandra_nodes = "127.0.0.1",
+	$install_dnsmasq = false,
 
 ){
 	validate_string($cassandra_nodes)
@@ -25,6 +26,9 @@ class kong(
 	if ($::operatingsystem == 'CentOS'){
 
 		ensure_packages(['epel-release', 'dnsmasq'])
+		if $install_dnsmasq == true {
+			ensure_packages(['dnsmasq'])
+		}
 
 		package{['nc','openssl098e']:
 			ensure => present,
