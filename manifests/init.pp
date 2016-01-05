@@ -47,12 +47,14 @@ class kong(
 			ensure => directory,
 			path   => '/etc/kong',
 			before => File['kong_config'],
+			mode   => '0750',
 		}
 
 		file {'nginx_working_dir':
 			ensure => directory,
 			path   => $nginx_working_dir,
 			before => File['kong_ssl_config'],
+			mode   => '0750',
 		}
 
 		file { 'kong_config':
