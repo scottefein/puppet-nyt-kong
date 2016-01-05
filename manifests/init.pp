@@ -59,7 +59,7 @@ class kong(
 
 		file {'logs_directory':
 			ensure => directory,
-			path   => $nginx_working_dir/logs,
+			path   => "${nginx_working_dir}logs",
 			before => File['kong_ssl_config'],
 			mode   => '0750',
 		}
