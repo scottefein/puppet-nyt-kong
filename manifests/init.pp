@@ -97,6 +97,16 @@ class kong(
 		  before => Exec['start_kong'],
 		}
 
+		file { '/etc/init.d/kong':
+		    ensure  => file,
+		    mode    => '0775',
+		    owner   => 'root',
+		    group   => 'root',
+		    content => template('kong/kong.init.erb'),
+		    notify  => Service['monit'],
+		    require => Package['monit'],
+		}
+
 		file { '/etc/monit.d/kong':
 		    ensure  => file,
 		    mode    => '0600',
@@ -105,7 +115,7 @@ class kong(
 		    content => template('kong/monit-kong.conf'),
 		    notify  => Service['monit'],
 		    require => Package['monit'],
-		 }
+		}
 
 		exec { 'start_kong':
 		    command => $kong_start_command,
