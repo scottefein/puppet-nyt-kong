@@ -57,6 +57,13 @@ class kong(
 			mode   => '0750',
 		}
 
+		file {'logs_directory':
+			ensure => directory,
+			path   => $nginx_working_dir/logs,
+			before => File['kong_ssl_config'],
+			mode   => '0750',
+		}
+
 		file { 'kong_config':
 			ensure  => file,
 			content => template('kong/kong.yaml.erb'),
