@@ -68,6 +68,7 @@ class kong(
 			ensure  => file,
 			content => template('kong/kong.yaml.erb'),
 			path 	=> $config_url,
+			notify => Service['kong'],
 		}
 
 		file {'kong_ssl_config':
@@ -122,7 +123,6 @@ class kong(
 			ensure    => 'running',
 			enable    => true,
 			require   => Package['kong'],
-			subscribe => File['kong_config'],
 		}
 
 	} else{
