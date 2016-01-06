@@ -68,7 +68,6 @@ class kong(
 			ensure  => file,
 			content => template('kong/kong.yaml.erb'),
 			path 	=> $config_url,
-			notify  => Exec['reload_kong'],
 		}
 
 		file {'kong_ssl_config':
@@ -84,7 +83,7 @@ class kong(
 		  source => "puppet:///modules/kong/kong-default.crt",
 		  path => '/usr/local/kong/ssl/kong-default.crt',
 		  require => File['kong_ssl_config'],
-		  before => Exec['start_kong'],
+		  before => Service['kong'],
 		}
 
 		file { 'kong_ssl_key':
@@ -94,7 +93,7 @@ class kong(
 		  source => "puppet:///modules/kong/kong-default.key",
 		  path => '/usr/local/kong/ssl/kong-default.key',
 		  require => File['kong_ssl_config'],
-		  before => Exec['start_kong'],
+		  before => Service['kong'],
 		}
 
 		file { '/etc/init.d/kong':
@@ -105,6 +104,7 @@ class kong(
 		    content => template('kong/kong.init.erb'),
 		    notify  => Service['monit'],
 		    require => Package['monit'],
+		    before  => Service['kong'],
 		}
 
 		file { '/etc/monit.d/kong':
@@ -115,18 +115,14 @@ class kong(
 		    content => template('kong/monit-kong.conf'),
 		    notify  => Service['monit'],
 		    require => Package['monit'],
+		    before  => Service['kong'],
 		}
 
-		exec { 'start_kong':
-		    command => $kong_start_command,
-		    path    => $kong_install_path,
-		    require => Package['kong'],
-		}->
-		exec {'reload_kong':
-			command => 'kong reload',
-			path    => $kong_install_path,
-			refreshonly => true,
-			require => Package['kong'],
+		service{'kong':
+			ensure    => 'running',
+			enable    => true,
+			require   => Package['kong'],
+			subscribe => File['kong_config'],
 		}
 
 	} else{
