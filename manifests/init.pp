@@ -40,7 +40,7 @@ class kong(
 			provider => 'rpm',
 			ensure => $ensure_package,
 			source => $kong_source_url,
-			require => File['kong_config'],
+			before => File['kong_config'],
 		}
 
 		file { 'kong_directory':
@@ -68,7 +68,7 @@ class kong(
 			ensure  => file,
 			content => template('kong/kong.yaml.erb'),
 			path 	=> $config_url,
-			notify => Service['kong'],
+			notify  => Service['kong'],
 		}
 
 		file {'kong_ssl_config':
@@ -103,9 +103,6 @@ class kong(
 		    owner   => 'root',
 		    group   => 'root',
 		    content => template('kong/kong.init.erb'),
-		    notify  => Service['monit'],
-		    require => Package['monit'],
-		    before  => Service['kong'],
 		}
 
 		file { '/etc/monit.d/kong':
@@ -114,15 +111,16 @@ class kong(
 		    owner   => 'root',
 		    group   => 'root',
 		    content => template('kong/monit-kong.conf'),
-		    notify  => Service['monit'],
-		    require => Package['monit'],
-		    before  => Service['kong'],
 		}
 
 		service{'kong':
 			ensure    => 'running',
 			enable    => true,
-			require   => Package['kong'],
+			require   => [
+				File['kong_config'],
+				File['/etc/init.d/kong'],
+				Package['kong'],
+			],
 		}
 
 	} else{
