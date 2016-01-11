@@ -13,6 +13,8 @@ class kong(
 	$dnsmasq_port = 8053,
 	$cassandra_nodes = "127.0.0.1",
 	$install_dnsmasq = false,
+	$kong_template = "kong/kong.yaml.erb",
+	$consul_enabled = false,
 
 ){
 	validate_string($cassandra_nodes)
@@ -63,12 +65,21 @@ class kong(
 			before => File['kong_ssl_config'],
 			mode   => '0750',
 		}
-
-		file { 'kong_config':
-			ensure  => file,
-			content => template('kong/kong.yaml.erb'),
-			path 	=> $config_url,
-			notify  => Service['kong'],
+		
+		if $consul_enabled == true {
+			consul_template::watch { 'kong_config':
+			    template    => $kong_template,
+		        destination => $config_url,
+			    command     => "service kong restart",
+			    require     => [Service["consul"]],
+			 }
+		} else {
+			file { 'kong_config':
+				ensure  => file,
+				content => template($kong_template)
+				path 	=> $config_url,
+				notify  => Service['kong'],
+			}
 		}
 
 		file {'kong_ssl_config':
