@@ -42,13 +42,13 @@ class kong(
 			provider => 'rpm',
 			ensure => $ensure_package,
 			source => $kong_source_url,
-			before => File['kong_config'],
+			before => Service['kong'],
 		}
 
 		file { 'kong_directory':
 			ensure => directory,
 			path   => '/etc/kong',
-			before => File['kong_config'],
+			before => Class['consul_template::watch'],
 			mode   => '0750',
 		}
 
