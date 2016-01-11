@@ -71,7 +71,7 @@ class kong(
 			    template    => $kong_template,
 		        destination => $config_url,
 			    command     => "service kong restart",
-			    require     => [Service["consul"]],
+			    require 	=> 	Class['consul_template::watch'],
 			 }
 		} else {
 			file { 'kong_config':
