@@ -76,7 +76,7 @@ class kong(
 		} else {
 			file { 'kong_config':
 				ensure  => file,
-				content => template($kong_template)
+				content => template($kong_template),
 				path 	=> $config_url,
 				notify  => Service['kong'],
 			}
