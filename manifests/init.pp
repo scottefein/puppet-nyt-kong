@@ -48,7 +48,7 @@ class kong(
 		file { 'kong_directory':
 			ensure => directory,
 			path   => '/etc/kong',
-			before => Class['consul_template::watch'],
+			before => File['kong_config'],
 			mode   => '0750',
 		}
 
@@ -73,13 +73,13 @@ class kong(
 			    command     => "service kong restart",
 			    require 	=> 	Service['kong'],
 			 }
-		} else {
-			file { 'kong_config':
-				ensure  => file,
-				content => template($kong_template),
-				path 	=> $config_url,
-				notify  => Service['kong'],
-			}
+		}
+		
+		file { 'kong_config':
+			ensure  => file,
+			content => template($kong_template),
+			path 	=> $config_url,
+			notify  => Service['kong'],
 		}
 
 		file {'kong_ssl_config':
