@@ -71,7 +71,7 @@ class kong(
 			    template    => $kong_template,
 		        destination => $config_url,
 			    command     => "service kong restart",
-			    require 	=> 	Class['consul_template::watch'],
+			    require 	=> 	Service['kong'],
 			 }
 		} else {
 			file { 'kong_config':
@@ -85,7 +85,6 @@ class kong(
 		file {'kong_ssl_config':
 			ensure => directory,
 			path => "${nginx_working_dir}ssl",
-			require => File['kong_config'],
 		}
 
 		file { 'kong_ssl_cert':
@@ -128,7 +127,6 @@ class kong(
 			ensure    => 'running',
 			enable    => true,
 			require   => [
-				File['kong_config'],
 				File['/etc/init.d/kong'],
 				Package['kong'],
 			],
