@@ -39,7 +39,7 @@ database: cassandra
 databases_available:
   cassandra:
     properties:
-      contact_points:{{range service "<%= scope.lookupvar('kong::cass_consul_name') %>"  "<%= scope.lookupvar('kong::cass_server_states') %>"}}
+      contact_points:{{range service "<%= scope.lookupvar('kong::consul_setup::cass_consul_name') %>"  "<%= scope.lookupvar('kong::consul_setup::cass_server_states') %>"}}
         - "{{.Address}}"{{end}}
       timeout: 1000
       keyspace: kong
