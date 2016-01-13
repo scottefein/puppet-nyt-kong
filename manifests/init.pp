@@ -48,7 +48,6 @@ class kong(
 		file { 'kong_directory':
 			ensure => directory,
 			path   => '/etc/kong',
-			before => File['kong_config'],
 			mode   => '0750',
 		}
 
@@ -65,22 +64,15 @@ class kong(
 			before => File['kong_ssl_config'],
 			mode   => '0750',
 		}
-		
-		if $consul_enabled == true {
-			consul_template::watch { 'kong_config':
-			    template    => $kong_template,
-		        destination => $config_url,
-			    command     => "service kong restart",
-			    require 	=> 	Service['kong'],
-			 }
-		}
-		
-		file { 'kong_config':
-			ensure  => file,
-			content => template($kong_template),
-			path 	=> $config_url,
-			notify  => Service['kong'],
-		}
+
+		if $consul_enabled == false{
+			file { 'kong_config':
+			 	ensure  => file,
+			 	content => template($kong_template),
+			 	path 	=> $config_url,
+				notify  => Service['kong'],
+			}
+		}	
 
 		file {'kong_ssl_config':
 			ensure => directory,
@@ -121,15 +113,6 @@ class kong(
 		    owner   => 'root',
 		    group   => 'root',
 		    content => template('kong/monit-kong.conf'),
-		}
-
-		service{'kong':
-			ensure    => 'running',
-			enable    => true,
-			require   => [
-				File['/etc/init.d/kong'],
-				Package['kong'],
-			],
 		}
 
 	} else{

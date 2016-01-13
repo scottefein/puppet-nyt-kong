@@ -1,0 +1,63 @@
+## Available plugins on this server
+plugins_available:
+  - ssl
+  - jwt
+  - acl
+  - cors
+  - oauth2
+  - tcp-log
+  - udp-log
+  - file-log
+  - http-log
+  - key-auth
+  - hmac-auth
+  - basic-auth
+  - ip-restriction
+  - mashape-analytics
+  - request-transformer
+  - response-transformer
+  - request-size-limiting
+  - rate-limiting
+  - response-ratelimiting
+
+## The Kong working directory
+## (Make sure you have read and write permissions)
+nginx_working_dir: <%= scope.lookupvar('kong::nginx_working_dir') %>
+
+## Port configuration
+
+proxy_port: <%= scope.lookupvar('kong::proxy_port') %>
+proxy_ssl_port: <%= scope.lookupvar('kong::proxy_ssl_port')%>
+admin_api_port: <%= scope.lookupvar('kong::admin_api_port') %>
+
+## Secondary port configuration
+dnsmasq_port: <%= scope.lookupvar('kong::dnsmasq_port') %>
+
+## Specify the DAO to use
+database: cassandra
+
+databases_available:
+  cassandra:
+    properties:
+      contact_points:{{range service "<%= scope.lookupvar('kong::cass_consul_name') %>"  "<%= scope.lookupvar('kong::cass_server_states') %>"}}
+        - "{{.Address}}"{{end}}
+      timeout: 1000
+      keyspace: kong
+      keepalive: 60000
+
+## Cassandra cache configuration
+database_cache_expiration: 5 # in seconds
+
+## SSL Settings
+## (Uncomment the two properties below to set your own certificate)
+# ssl_cert_path: /path/to/certificate.pem
+# ssl_key_path: /path/to/certificate.key
+
+## Sends anonymous error reports
+send_anonymous_reports: true
+
+## In-memory cache size (MB)
+memory_cache_size: 128
+
+{{file "/etc/consul-template/kong_nginx_config" }}
+
