@@ -108,6 +108,7 @@ class kong(
 		    mode    => '0600',
 		    owner   => 'root',
 		    group   => 'root',
+		    require => '/etc/init.d/kong',
 		    content => template('kong/monit-kong.conf'),
 		}
 
