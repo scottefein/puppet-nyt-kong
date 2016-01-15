@@ -42,7 +42,6 @@ class kong(
 			provider => 'rpm',
 			ensure => $ensure_package,
 			source => $kong_source_url,
-			before => Service['kong'],
 		}
 
 		file { 'kong_directory':
@@ -70,7 +69,6 @@ class kong(
 			 	ensure  => file,
 			 	content => template($kong_template),
 			 	path 	=> $config_url,
-				notify  => Service['kong'],
 			}
 		}	
 
@@ -86,7 +84,6 @@ class kong(
 		  source => "puppet:///modules/kong/kong-default.crt",
 		  path => '/usr/local/kong/ssl/kong-default.crt',
 		  require => File['kong_ssl_config'],
-		  before => Service['kong'],
 		}
 
 		file { 'kong_ssl_key':
@@ -96,7 +93,6 @@ class kong(
 		  source => "puppet:///modules/kong/kong-default.key",
 		  path => '/usr/local/kong/ssl/kong-default.key',
 		  require => File['kong_ssl_config'],
-		  before => Service['kong'],
 		}
 
 		file { '/etc/init.d/kong':
