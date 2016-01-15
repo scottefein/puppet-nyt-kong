@@ -17,6 +17,5 @@ class kong::consul_setup(
 		destination => $config_url,
 		command => $kong_command,	
 		require => File['kong_nginx_config'],
-		consul_wait => "15s:60s",
 	}
 }
