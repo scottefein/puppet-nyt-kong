@@ -16,7 +16,6 @@ class kong::consul_setup(
 		template =>  $kong_template,
 		destination => $config_url,
 		command => $kong_command,	
-		before => Service['kong'],
 		require => File['kong_nginx_config'],
 	}
 }
