@@ -36,14 +36,12 @@ dnsmasq_port: <%= scope.lookupvar('kong::dnsmasq_port') %>
 ## Specify the DAO to use
 database: cassandra
 
-databases_available:
-  cassandra:
-    properties:
-      contact_points:{{range service "<%= scope.lookupvar('kong::consul_setup::cass_consul_name') %>"}}
-        - "{{.Address}}"{{end}}
-      timeout: 1000
-      keyspace: kong
-      keepalive: 60000
+cassandra:
+  contact_points:{{range service "<%= scope.lookupvar('kong::consul_setup::cass_consul_name') %>"}}
+    - "{{.Address}}"{{end}}
+  keyspace: kong
+  replication_strategy: SimpleStrategy
+  replication_factor: 1
 
 ## Cassandra cache configuration
 database_cache_expiration: 5 # in seconds
