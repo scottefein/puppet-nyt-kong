@@ -29,7 +29,7 @@ class kong(
 
 		ensure_packages(['epel-release'])
 		if $install_dnsmasq == true {
-			ensure_packages(['dnsmasq'])
+			ensure_packages(['dnsmasq', 'monit'])
 		}
 
 		package{['nc','openssl098e']:
@@ -111,6 +111,12 @@ class kong(
 		    require => File['/etc/init.d/kong'],
 		    content => template('kong/monit-kong.conf'),
 		    notify  => Service['monit'],
+		}
+
+		service { 'monit':
+			ensure => running,
+			enable => true,
+			require => Package['monit'],
 		}
 
 	} else{
