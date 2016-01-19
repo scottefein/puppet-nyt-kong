@@ -11,7 +11,7 @@ class kong::consul_setup(
 		path => $nginx_kong_config_path,
 		ensure  => file,
 	 	content => template($nginx_config_template),
-	} ->
+	} 
 
 	consul_template::watch { 'kong':
 		template =>  $kong_template,
@@ -19,5 +19,11 @@ class kong::consul_setup(
 		command => $kong_command,	
 		require => File['kong_nginx_config'],
 		notify  => Service['monit'],
+	}
+
+	service { 'monit':
+		ensure => running,
+		enable => true,
+		require => Package['monit'],
 	}
 }

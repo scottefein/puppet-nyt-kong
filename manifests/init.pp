@@ -113,12 +113,6 @@ class kong(
 		    notify  => Service['monit'],
 		}
 
-		service { 'monit':
-			ensure => running,
-			enable => true,
-			require => Package['monit'],
-		}
-
 	} else{
 		fail('Only CentOS 6 is currently supported')
 	}
