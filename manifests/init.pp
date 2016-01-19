@@ -15,7 +15,7 @@ class kong(
 	$install_dnsmasq = false,
 	$kong_template = "kong/kong.yaml.erb",
 	$consul_enabled = false,
-
+	$cluster_listen_port = 7946,
 ){
 	validate_string($cassandra_nodes)
 	if $kong_version != "newest" {
