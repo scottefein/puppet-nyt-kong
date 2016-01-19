@@ -110,6 +110,7 @@ class kong(
 		    group   => 'root',
 		    require => File['/etc/init.d/kong'],
 		    content => template('kong/monit-kong.conf'),
+		    notify  => Service['monit'],
 		}
 
 	} else{

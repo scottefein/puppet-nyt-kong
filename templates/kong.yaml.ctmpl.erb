@@ -1,24 +1,5 @@
 ## Available plugins on this server
-plugins_available:
-  - ssl
-  - jwt
-  - acl
-  - cors
-  - oauth2
-  - tcp-log
-  - udp-log
-  - file-log
-  - http-log
-  - key-auth
-  - hmac-auth
-  - basic-auth
-  - ip-restriction
-  - mashape-analytics
-  - request-transformer
-  - response-transformer
-  - request-size-limiting
-  - rate-limiting
-  - response-ratelimiting
+custom_plugins:
 
 ## The Kong working directory
 ## (Make sure you have read and write permissions)
@@ -26,12 +7,16 @@ nginx_working_dir: <%= scope.lookupvar('kong::nginx_working_dir') %>
 
 ## Port configuration
 
-proxy_port: <%= scope.lookupvar('kong::proxy_port') %>
-proxy_ssl_port: <%= scope.lookupvar('kong::proxy_ssl_port')%>
-admin_api_port: <%= scope.lookupvar('kong::admin_api_port') %>
+proxy_listen: "0.0.0.0:<%= scope.lookupvar('kong::proxy_port') %>"
+proxy_listen_ssl: "0.0.0.0:<%= scope.lookupvar('kong::proxy_ssl_port')%>"
+admin_api_listen: "0.0.0.0:<%= scope.lookupvar('kong::admin_api_port') %>"
+cluster_listen: "0.0.0.0:<%= scope.lookupvar('kong::cluster_listen_port') %>"
 
-## Secondary port configuration
-dnsmasq_port: <%= scope.lookupvar('kong::dnsmasq_port') %>
+dns_resolver: dnsmasq
+
+dns_resolvers_available:
+  dnsmasq:
+    port: <%= scope.lookupvar('kong::dnsmasq_port') %>
 
 ## Specify the DAO to use
 database: cassandra
