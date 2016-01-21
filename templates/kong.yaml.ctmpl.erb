@@ -24,7 +24,7 @@ database: cassandra
 cassandra:
   contact_points:{{range service "<%= scope.lookupvar('kong::consul_setup::cass_consul_name') %>"}}
     - "{{.Address}}"{{end}}
-  keyspace: kong
+  keyspace: <%= scope.lookupvar('kong::kong_keyspace') %>
   replication_strategy: SimpleStrategy
   replication_factor: 1
 

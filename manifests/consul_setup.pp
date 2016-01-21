@@ -6,6 +6,7 @@ class kong::consul_setup(
 	$cass_consul_name = "cass",
 	$nginx_config_template = "kong/nginx_config",
 	$cluster_listen_port = 7946,
+	$kong_keyspace = "kong",
 ){
 	file{'kong_nginx_config':
 		path => $nginx_kong_config_path,
